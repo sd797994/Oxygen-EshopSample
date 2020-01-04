@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+spec:
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccount: nfs-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: 192.168.0.254:8082/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: fuseim.pri/ifs
+            - name: NFS_SERVER
+              value: 192.168.0.220
+            - name: NFS_PATH
+              value: /data/nfs
+      volumes:
+        - name: nfs-client
+          nfs:
+            server: 192.168.0.220
+            path: /data/nfs

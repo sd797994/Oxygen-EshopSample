@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "User.Host": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    <PackageReference Include="Oxygen" Version="0.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Public Interface\BaseServcieInterface\BaseServcieInterface.csproj" />
+    <ProjectReference Include="..\..\..\Public Interface\GoodsServiceInterface\GoodsServiceInterface.csproj" />
+    <ProjectReference Include="..\..\..\Public Interface\OrderServiceInterface\OrderServiceInterface.csproj" />
+    <ProjectReference Include="..\..\..\Public Interface\TradeServiceInterface\TradeServiceInterface.csproj" />
+    <ProjectReference Include="..\..\..\Public Interface\UserServiceInterface\UserServiceInterface.csproj" />
+    <ProjectReference Include="..\..\BaseLib\ApplicationBase\ApplicationBase.csproj" />
+    <ProjectReference Include="..\..\BaseLib\DomainBase\DomainBase.csproj" />
+    <ProjectReference Include="..\..\BaseLib\InfrastructureBase\InfrastructureBase.csproj" />
+  </ItemGroup>
+</Project>

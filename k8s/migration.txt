@@ -1,0 +1,18 @@
+add-migration -Name "InitDb1" -Project "Goods.Infrastructure" -StartupProject "Goods.Infrastructure" -Verbose
+update-database  -Migration "InitDb1" -Project "Goods.Infrastructure" -StartupProject "Goods.Infrastructure" -Verbose
+
+add-migration -Name "InitDb1" -Project "Order.Infrastructure" -StartupProject "Order.Infrastructure" -Verbose
+update-database  -Migration "InitDb1" -Project "Order.Infrastructure" -StartupProject "Order.Infrastructure" -Verbose
+
+add-migration -Name "InitDb" -Project "Trade.Infrastructure" -StartupProject "Trade.Infrastructure" -Verbose
+update-database  -Migration "InitDb" -Project "Trade.Infrastructure" -StartupProject "Trade.Infrastructure" -Verbose
+
+add-migration -Name "InitDb" -Project "User.Infrastructure" -StartupProject "User.Infrastructure" -Verbose
+update-database  -Migration "InitDb" -Project "User.Infrastructure" -StartupProject "User.Infrastructure" -Verbose
+
+
+Order.Host
+
+Trade.Host
+
+User.Host

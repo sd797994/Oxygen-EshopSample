@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Public Interface\TradeServiceInterface\TradeServiceInterface.csproj" />
+    <ProjectReference Include="..\..\..\Public Interface\GoodsServiceInterface\GoodsServiceInterface.csproj" />
+    <ProjectReference Include="..\..\BaseLib\ApplicationBase\ApplicationBase.csproj" />
+    <ProjectReference Include="..\Goods.Domain\Goods.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

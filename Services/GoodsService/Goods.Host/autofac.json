@@ -1,0 +1,23 @@
+{
+  "defaultAssembly": "Goods.Infrastructure",
+  "modules": [
+    {
+      "type": "Goods.Infrastructure.Modules.ApplicationModule",
+      "properties": {
+      }
+    },
+    {
+      "type": "Goods.Infrastructure.Modules.DomainModule",
+      "properties": {
+      }
+    },
+    {
+      "type": "Goods.Infrastructure.Modules.InfrastructureModule",
+      "properties": {
+        "RedisConnection": "192.168.1.174:6379",
+        "RabbitMqConnection": "192.168.1.174",
+        "SqlConnectionString": "Server=192.168.1.174;Database=OxygenEshopSample;UId=sa;Pwd=sa;"
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "defaultAssembly": "Trade.Infrastructure",
+  "modules": [
+    {
+      "type": "Trade.Infrastructure.Modules.ApplicationModule",
+      "properties": {
+      }
+    },
+    {
+      "type": "Trade.Infrastructure.Modules.DomainModule",
+      "properties": {
+      }
+    },
+    {
+      "type": "Trade.Infrastructure.Modules.InfrastructureModule",
+      "properties": {
+        "RedisConnection": "192.168.1.174:6379",
+        "RabbitMqConnection": "192.168.1.174",
+        "SqlConnectionString": "Server=192.168.1.174;Database=OxygenEshopSample;User Id=sa;Password=sa;"
+      }
+    }
+  ]
+}

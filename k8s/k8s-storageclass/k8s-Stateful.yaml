@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mssql-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-dep
+  template:
+    metadata:
+      labels:
+        app: mssql-dep
+    spec:
+      containers:
+      - name: mssql
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+        - name: http
+          containerPort: 1433
+        volumeMounts:
+        - name: data
+          mountPath: /var/opt/mssql
+        env:
+        - name: ACCEPT_EULA
+          value: Y
+        - name: SA_PASSWORD
+          value: sa
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "nfs-storage"
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: mssql
+spec:
+  selector:
+    app: mssql-pod
+  ports:
+  - protocol: TCP
+    port: 1433 
+    targetPort: 1433

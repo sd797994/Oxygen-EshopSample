@@ -1,0 +1,128 @@
+USE [OxygenEshopSample]
+GO
+/****** Object:  Table [dbo].[Goods]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Goods](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[Name] [nvarchar](20) NOT NULL,
+	[Price] [decimal](18, 2) NOT NULL,
+	[Stock] [int] NOT NULL,
+	[IsUpshelf] [bit] NOT NULL,
+	[UpshelfTime] [datetime] NULL,
+ CONSTRAINT [PK_Goods] PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Order]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Order](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[OrderNo] [nvarchar](20) NOT NULL,
+	[TotalPrice] [decimal](18, 2) NOT NULL,
+	[State] [int] NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[OrderHandleLog]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OrderHandleLog](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[OrderNo] [nvarchar](20) NOT NULL,
+	[OrderId] [uniqueidentifier] NULL,
+	[HandleSuccess] [bit] NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+	[UserName] [varchar](12) NOT NULL,
+	[LogContent] [nvarchar](200) NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[OrderItem]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OrderItem](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[OrderId] [uniqueidentifier] NOT NULL,
+	[GoodsId] [uniqueidentifier] NOT NULL,
+	[Count] [int] NOT NULL,
+	[Name] [nvarchar](20) NOT NULL,
+	[SinglePrice] [decimal](18, 2) NOT NULL,
+	[TotalPrice] [decimal](18, 2) NOT NULL,
+ CONSTRAINT [PK_OrderItem] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Trade]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Trade](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+	[Balance] [decimal](18, 2) NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TradeRecord]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TradeRecord](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[TradeId] [uniqueidentifier] NOT NULL,
+	[TradeType] [int] NOT NULL,
+	[Amount] [decimal](18, 2) NOT NULL,
+	[TradeTime] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 2020/1/2 10:56:46 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[User](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CreateTime] [datetime] NOT NULL,
+	[CreateUserId] [uniqueidentifier] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[Account] [varchar](12) NOT NULL,
+	[Password] [varchar](32) NOT NULL,
+	[State] [int] NOT NULL
+) ON [PRIMARY]
+GO
