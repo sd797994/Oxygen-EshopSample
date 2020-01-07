@@ -50,6 +50,6 @@ kubectl get pod
 
 MIT
 
-[1]: https://www.github.com/sd797994/oxygen "Oxygen"
+[1]: https://github.com/sd797994/Oxygen/tree/dev-k8s "Oxygen"
 [2]: https://www.jianshu.com/p/c726ed03562a "这里"
 [3]: https://www.github.com/dotnetcore/cap "CAP"
