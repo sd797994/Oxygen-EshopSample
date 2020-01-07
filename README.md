@@ -30,9 +30,11 @@ cd Oxygen-EshopSample
 .\DockerRunByK8s.bat
 ```
 * 项目第一次初始化会下载默认的镜像，或者您可以提前下载需要的镜像
-`docker pull redis:latest`
-`docker pull rabbitmq:latest`
-`docker pull mcr.microsoft.com/mssql/server:2019-latest`
+```bash
+docker pull redis:latest
+docker pull rabbitmq:latest
+docker pull mcr.microsoft.com/mssql/server:2019-latest
+```
 
 * 修改Host文件写入以下配置
 ```bash
