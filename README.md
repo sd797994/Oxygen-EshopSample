@@ -46,6 +46,38 @@ docker pull mcr.microsoft.com/mssql/server:2019-latest
 ```bash
 kubectl get pod
 ```
+### 附录
+本地k8s环境安装简易教程
+* 首先确保您的机器是windows10
+  通过https://www.docker.com/products/docker-desktop 下载最新版本的docker for windows 社区版本
+  安装并启动docker-ce ，在任务栏点击docker图标，并发右键Switch to Linux Containers切换到linux平台
+  在任务栏点击docker图标，点击About Docker Desktop 查看Kubernetes 所要求的版本
+  下载kubernetst 所需要的镜像
+  ```bash
+  git clone https://github.com/AliyunContainerService/k8s-for-docker-desktop.git
+  cd k8s-for-docker-desktop
+  .\load_images.ps1
+```
+  *请确保git分支和docker-ce要求的k8s版本一致，否则会导致k8s无法启动（如果git对应的分支没有包含您需要的版本，则需要自行通过国内镜像源下载所需镜像）
+  查看docker镜像
+  ```docker images```
+  ```bash
+k8s.gcr.io/kube-apiserver              v1.14.8       1e94481e8f30        2 months ago        209MB
+k8s.gcr.io/kube-proxyr                 v1.14.8       849af609e0c6        2 months ago        82.1MB
+k8s.gcr.io/kube-schedulerr             v1.14.8       f1e3e5f9f93e        2 months ago        81.6MB
+k8s.gcr.io/kube-controller-managerr    v1.14.8       36a8001a79fd        2 months ago        158MB
+docker/kube-compose-controllerr        v0.4.23       a8c3d87a58e7        7 months ago        35.3MB
+docker/kube-compose-api-serverr        v0.4.23       f3591b2cb223        7 months ago        49.9MB
+k8s.gcr.io/corednsr                    1.3.1         eb516548c180        11 months ago       40.3MB
+k8s.gcr.io/etcdr                       3.3.10        2c4adeb21b4f        13 months ago       258MB
+k8s.gcr.io/pauser                      3.1           da86e6ba6ca1        2 years ago         742kB
+  ```
+  在任务栏点击docker图标 -> setting -> Kubernets -> 勾选Enable Kubernetes -> Apply 并等待k8s环境启动完成
+  在cmd输入```kubectl get node```如下所示则表示k8s已经成功启动:
+   ```bash
+  NAME             STATUS   ROLES    AGE   VERSION
+docker-desktop   Ready    master   1s   v1.14.8
+```
 ## License
 
 MIT
