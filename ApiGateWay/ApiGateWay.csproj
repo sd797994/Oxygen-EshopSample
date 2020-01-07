@@ -18,7 +18,7 @@
     <ProjectReference Include="..\Public Interface\OrderServiceInterface\OrderServiceInterface.csproj" />
     <ProjectReference Include="..\Public Interface\TradeServiceInterface\TradeServiceInterface.csproj" />
     <ProjectReference Include="..\Public Interface\UserServiceInterface\UserServiceInterface.csproj" />
-    <ProjectReference Include="..\Services\CommonServce\AggregateServiceManager\AggregateServiceManager.csproj" />
+    <ProjectReference Include="..\Services\CommonService\AggregateServiceManager\AggregateServiceManager.csproj" />
   </ItemGroup>
 
 

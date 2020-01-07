@@ -14,9 +14,9 @@
     {
       "type": "User.Infrastructure.Modules.InfrastructureModule",
       "properties": {
-        "RedisConnection": "192.168.1.174:6379",
-        "RabbitMqConnection": "192.168.1.174",
-        "SqlConnectionString": "Server=192.168.1.174;Database=OxygenEshopSample;User Id=sa;Password=sa;"
+        "RedisConnection": "redis", //192.168.1.x:6379
+        "RabbitMqConnection": "rabbitmq", //192.168.1.x
+        "SqlConnectionString": "Server=mssql;Database=OxygenEshopSample-user;UId=sa;Pwd=Mytestpwd#123;"
       }
     }
   ]

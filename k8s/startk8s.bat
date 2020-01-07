@@ -1,1 +1,0 @@
-kubectl apply -f k8sSample.yaml

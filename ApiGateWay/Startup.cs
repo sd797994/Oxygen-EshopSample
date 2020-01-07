@@ -20,6 +20,8 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Newtonsoft.Json.Serialization;
+using InfrastructureBase.EfDataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiGateWay
 {
@@ -59,6 +61,7 @@ namespace ApiGateWay
                 option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
+            services.AddDbContext<DefContext>(options => options.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value));//Êý¾ÝÇ¨ÒÆ
             services.AddCap(x =>
             {
                 x.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value);

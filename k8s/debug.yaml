@@ -1,0 +1,370 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-dep
+  labels:
+    app: apigateway-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: apigateway-pod
+    spec:
+      containers:
+        - name: web
+          image: apigateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+spec:
+  selector:
+    app: apigateway-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobrunner-dep
+  labels:
+    app: jobrunner-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobrunner-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: jobrunner-pod
+    spec:
+      containers:
+        - name: web
+          image: jobrunner:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/CommonService/JobRunner/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice-dep
+  labels:
+    app: userservice-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: userservice-pod
+    spec:
+      containers:
+        - name: web
+          image: userservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+spec:
+  selector:
+    app: userservice-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradeservice-dep
+  labels:
+    app: tradeservice-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradeservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: tradeservice-pod
+    spec:
+      containers:
+        - name: web
+          image: tradeservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/TradeService/Trade.Host/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tradeservice
+spec:
+  selector:
+    app: tradeservice-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodsservice-dep
+  labels:
+    app: goodsservice-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goodsservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: goodsservice-pod
+    spec:
+      containers:
+        - name: web
+          image: goodsservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/GoodsService/Goods.Host/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: goodsservice
+spec:
+  selector:
+    app: goodsservice-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderservice-dep
+  labels:
+    app: orderservice-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: orderservice-pod
+    spec:
+      containers:
+        - name: web
+          image: orderservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/OrderService/Order.Host/debugpublish
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice
+spec:
+  selector:
+    app: orderservice-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dep
+  labels:
+    app: frontend-dep
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-pod
+  minReadySeconds: 5 
+  strategy: 
+    type: RollingUpdate 
+    rollingUpdate:
+      maxUnavailable: 1 
+      maxSurge: 1
+  template: 
+    metadata:
+      labels: 
+        app: frontend-pod
+    spec:
+      containers:
+        - name: web
+          image: frontend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend-pod
+  ports:
+  - protocol: TCP
+    port: 80 
+    targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-myapp
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: api.oxygen-eshopsample.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: apigateway
+              servicePort: 80
+    - host: www.oxygen-eshopsample.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: frontend
+              servicePort: 80

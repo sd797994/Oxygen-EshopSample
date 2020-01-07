@@ -7,10 +7,12 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using Hangfire;
+using InfrastructureBase.EfDataAccess;
 using JobRunner.EventHandler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,6 +43,8 @@ namespace JobRunner
             GlobalConfiguration.Configuration.UseSqlServerStorage(Configuration.GetSection("SqlConnectionString").Value);
             services.AddHangfire(x => { });
             services.RegisterRunnerModule();//注入订阅作业入口
+            services.AddDbContext<DefContext>(options => options.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value));//数据迁移
+            services.AddHostedService<CustomerService>();
             services.AddCap(x =>
             {
                 x.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value);
