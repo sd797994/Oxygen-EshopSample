@@ -15,7 +15,7 @@ namespace Goods.Infrastructure.Repository
     {
         private readonly GoodsContext _context;
         public GoodsRepository(
-            GoodsContext context, ICurrentUserInfo currentUser) : base(context, currentUser)
+            GoodsContext context, IIocContainer container) : base(context, container)
         {
             _context = context;
         }

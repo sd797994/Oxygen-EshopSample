@@ -1,10 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway-dep
-  labels:
-    app: apigateway-dep
-spec:
+  name: apigateway-dep-v1
+spec: 
   replicas: 1
   selector:
     matchLabels:
@@ -19,6 +17,7 @@ spec:
     metadata:
       labels:
         app: apigateway-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -34,7 +33,47 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-dep-v2
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: apigateway-pod
+        version: v2
+    spec:
+      containers:
+        - name: web
+          image: apigateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -47,16 +86,14 @@ spec:
   selector:
     app: apigateway-pod
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - port: 80 
+    targetPort: 80
+    name: http-apigateway
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jobrunner-dep
-  labels:
-    app: jobrunner-dep
 spec:
   replicas: 1
   selector:
@@ -72,6 +109,7 @@ spec:
     metadata:
       labels:
         app: jobrunner-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -87,7 +125,7 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/CommonService/JobRunner/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/CommonService/JobRunner/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -95,9 +133,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userservice-dep
-  labels:
-    app: userservice-dep
+  name: userservice-dep-v1
 spec:
   replicas: 1
   selector:
@@ -113,6 +149,7 @@ spec:
     metadata:
       labels:
         app: userservice-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -128,7 +165,48 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
+        - name: v2
+          hostPath:
+            path: /c/Users/Administrator/vsdbg/vs2017u5
+---
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice-dep-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: userservice-pod
+        version: v2
+    spec:
+      containers:
+        - name: web
+          image: userservice:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -141,9 +219,9 @@ spec:
   selector:
     app: userservice-pod
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - port: 80 
+    targetPort: 80 
+    name: http-userservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -166,6 +244,7 @@ spec:
     metadata:
       labels:
         app: tradeservice-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -181,7 +260,7 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/TradeService/Trade.Host/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/TradeService/Trade.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -194,9 +273,9 @@ spec:
   selector:
     app: tradeservice-pod
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - port: 80 
+    targetPort: 80 
+    name: http-tradeservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -219,6 +298,7 @@ spec:
     metadata:
       labels:
         app: goodsservice-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -234,7 +314,7 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/GoodsService/Goods.Host/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/GoodsService/Goods.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -247,9 +327,9 @@ spec:
   selector:
     app: goodsservice-pod
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - port: 80 
+    targetPort: 80 
+    name: http-goodsservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -272,6 +352,7 @@ spec:
     metadata:
       labels:
         app: orderservice-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -287,7 +368,7 @@ spec:
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/OrderService/Order.Host/debugpublish
+            path: /e/dotnet_project/Oxygen-EshopSample/Services/OrderService/Order.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
             path: /c/Users/Administrator/vsdbg/vs2017u5
@@ -300,9 +381,9 @@ spec:
   selector:
     app: orderservice-pod
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - port: 80 
+    targetPort: 80 
+    name: http-orderservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -325,6 +406,7 @@ spec:
     metadata:
       labels: 
         app: frontend-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -332,6 +414,9 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 80
+          env:
+            - name: VUE_APP_CANARYVER
+              value: v2
 ---
 apiVersion: v1
 kind: Service 
@@ -341,30 +426,6 @@ spec:
   selector:
     app: frontend-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ingress-myapp
-  namespace: default
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-spec:
-  rules:
-    - host: api.oxygen-eshopsample.com
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: apigateway
-              servicePort: 80
-    - host: www.oxygen-eshopsample.com
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: frontend
-              servicePort: 80
+    name: http-frontend

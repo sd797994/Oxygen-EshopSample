@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -21,8 +23,7 @@ namespace ApiGateWay
     {
         public CustomerService(ILifetimeScope container, IConfiguration configuration, ICacheService cacheService, DefContext defContext)
         {
-            IocContainer.BuilderIocContainer(container);//依赖注入本地静态容器实例
-            RouteManager.LoadAggregateServiceRoute();//初始化聚合服务路由
+            RouteManager.LoadAggregateServiceRoute(container);//初始化聚合服务路由
             cacheService.InitCacheService(configuration.GetSection("RedisConnection").Value);//启动缓存客户端
             defContext.Database.EnsureCreated();//自动迁移数据库
         }

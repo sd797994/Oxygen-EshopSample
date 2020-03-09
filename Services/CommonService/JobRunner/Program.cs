@@ -28,7 +28,7 @@ namespace JobRunner
                         //ªÒ»°oxygen≈‰÷√Ω⁄
                         config.AddJsonFile("oxygen.json");
                     });
-                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8888");
+                    webBuilder.UseStartup<Startup>();
                 }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
     }
 }

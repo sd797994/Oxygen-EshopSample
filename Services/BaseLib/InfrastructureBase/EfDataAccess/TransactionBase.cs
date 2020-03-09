@@ -13,13 +13,15 @@ namespace InfrastructureBase
     {
         private IDbContextTransaction contextTransaction;
         private readonly TContext context;
-        public TransactionBase(TContext context)
+        private readonly IIocContainer container;
+        public TransactionBase(TContext context, IIocContainer container)
         {
             this.context = context;
+            this.container = container;
         }
         public ITransaction BeginTransaction()
         {
-            contextTransaction = context.Database.BeginTransaction(IocContainer.Resolve<ICapPublisher>());
+            contextTransaction = context.Database.BeginTransaction(container.Resolve<ICapPublisher>());
             return this;
         }
 

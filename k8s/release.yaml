@@ -1,24 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway-dep
-  labels:
-    app: apigateway-dep
+  name: apigateway-dep-v1
 spec: 
   replicas: 1
   selector:
     matchLabels:
       app: apigateway-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: apigateway-pod
+        version: v1
+    spec:
+      containers:
+        - name: web
+          image: apigateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-dep-v2
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: apigateway-pod
+        version: v2
     spec:
       containers:
         - name: web
@@ -28,38 +55,37 @@ spec:
             - containerPort: 80
 ---
 apiVersion: v1
-kind: Service 
+kind: Service
 metadata:
   name: apigateway
 spec:
   selector:
     app: apigateway-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80
+    name: http-apigateway
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jobrunner-dep
-  labels:
-    app: jobrunner-dep
-spec: 
+spec:
   replicas: 1
   selector:
     matchLabels:
       app: jobrunner-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: jobrunner-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -71,43 +97,70 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userservice-dep
-  labels:
-    app: userservice-dep
-spec: 
+  name: userservice-v1
+spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: userservice-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: userservice-pod
+        version: v1
     spec:
       containers:
         - name: web
           image: userservice:latest
-          imagePullPolicy: Never 
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice-pod
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: userservice-pod
+        version: v2
+    spec:
+      containers:
+        - name: web
+          image: userservice:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
-kind: Service 
+kind: Service
 metadata:
   name: userservice
 spec:
-  selector: 
-    app: userservice-pod 
+  selector:
+    app: userservice-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80 
+    name: http-userservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -115,40 +168,41 @@ metadata:
   name: tradeservice-dep
   labels:
     app: tradeservice-dep
-spec: 
+spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: tradeservice-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: tradeservice-pod
+        version: v1
     spec:
       containers:
         - name: web
           image: tradeservice:latest
-          imagePullPolicy: Never 
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
-kind: Service 
+kind: Service
 metadata:
   name: tradeservice
 spec:
-  selector: 
-    app: tradeservice-pod 
+  selector:
+    app: tradeservice-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80 
+    name: http-tradeservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -156,40 +210,41 @@ metadata:
   name: goodsservice-dep
   labels:
     app: goodsservice-dep
-spec: 
+spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: goodsservice-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: goodsservice-pod
+        version: v1
     spec:
       containers:
         - name: web
           image: goodsservice:latest
-          imagePullPolicy: Never 
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
-kind: Service 
+kind: Service
 metadata:
   name: goodsservice
 spec:
-  selector: 
-    app: goodsservice-pod 
+  selector:
+    app: goodsservice-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80 
+    name: http-goodsservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -197,40 +252,41 @@ metadata:
   name: orderservice-dep
   labels:
     app: orderservice-dep
-spec: 
+spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: orderservice-pod
-  minReadySeconds: 5 
-  strategy: 
-    type: RollingUpdate 
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 
+      maxUnavailable: 1
       maxSurge: 1
-  template: 
+  template:
     metadata:
-      labels: 
+      labels:
         app: orderservice-pod
+        version: v1
     spec:
       containers:
         - name: web
           image: orderservice:latest
-          imagePullPolicy: Never 
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
-kind: Service 
+kind: Service
 metadata:
   name: orderservice
 spec:
-  selector: 
-    app: orderservice-pod 
+  selector:
+    app: orderservice-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80 
+    name: http-orderservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -253,6 +309,7 @@ spec:
     metadata:
       labels: 
         app: frontend-pod
+        version: v1
     spec:
       containers:
         - name: web
@@ -269,30 +326,7 @@ spec:
   selector:
     app: frontend-pod
   ports:
-  - protocol: TCP
-    port: 80 
+  - port: 80 
     targetPort: 80
+    name: http-frontend
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ingress-myapp
-  namespace: default
-  annotations: 
-    kubernetes.io/ingress.class: "nginx"
-spec:
-  rules:
-  - host: api.oxygen-eshopsample.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: apigateway
-          servicePort: 80
-  - host: www.oxygen-eshopsample.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: frontend
-          servicePort: 80

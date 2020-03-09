@@ -40,7 +40,7 @@ namespace JobRunner
                 configure.AddConsole();
             });
             services.AddAutofac();
-            GlobalConfiguration.Configuration.UseSqlServerStorage(Configuration.GetSection("SqlConnectionString").Value);
+            GlobalConfiguration.Configuration.UseRedisStorage(Configuration.GetSection("RedisConnection").Value);
             services.AddHangfire(x => { });
             services.RegisterRunnerModule();//注入订阅作业入口
             services.AddDbContext<DefContext>(options => options.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value));//数据迁移

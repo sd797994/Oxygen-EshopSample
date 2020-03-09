@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InfrastructureBase
@@ -21,10 +22,12 @@ namespace InfrastructureBase
     {
         private readonly TContext _context;
         private ICurrentUserInfo currentUser;
-        protected RepositoryBase(TContext context, ICurrentUserInfo currentUser)
+        private static readonly AsyncLocal<IGlobalTool> globaltool = new AsyncLocal<IGlobalTool>();
+        protected RepositoryBase(TContext context, IIocContainer _container)
         {
             _context = context;
-            this.currentUser = currentUser;
+            globaltool.Value = _container.Resolve<IGlobalTool>();
+            this.currentUser = _container.Resolve<ICurrentUserInfo>();
         }
         /// <summary>
         /// 新增对象
@@ -265,7 +268,7 @@ namespace InfrastructureBase
                     nameof(OrderEnum.OrderByDescending) :
                     orderbyList.IndexOf(x) > 0 && x.Item2 ?
                     nameof(OrderEnum.ThenBy) : nameof(OrderEnum.ThenByDescending)
-                    , new[] { typeof(TPo), newOrder.Body.Type }, source.Expression, newOrder));
+                    , new[] { typeof(TPo), typeof(object) }, source.Expression, newOrder));
             });
             return (IOrderedQueryable<TPo>)source;
         }
@@ -273,47 +276,47 @@ namespace InfrastructureBase
 
         public TPo GetPersistentObject(TDo source, bool addCreateUserId = false)
         {
-            var result = IocContainer.Resolve<IGlobalTool>().Map<TDo, TPo>(source);
+            var result = globaltool.Value.Map<TDo, TPo>(source);
             if (addCreateUserId)
                 result.CreateUserId = currentUser.UserId;
             return result;
         }
         public List<TPo> GetPersistentObjectList(ICollection<TDo> source, bool addCreateUserId = false)
         {
-            var result = IocContainer.Resolve<IGlobalTool>().MapList<TDo, TPo>(source);
+            var result = globaltool.Value.MapList<TDo, TPo>(source);
             if (addCreateUserId)
                 result.ForEach(x => x.CreateUserId = currentUser.UserId);
             return result;
         }
         public static TDo GetDomainEntity(TPo source)
         {
-            return IocContainer.Resolve<IGlobalTool>().Map<TPo, TDo>(source);
+            return globaltool.Value.Map<TPo, TDo>(source);
         }
         public static List<TDo> GetDomainEntityList(ICollection<TPo> source)
         {
-            return IocContainer.Resolve<IGlobalTool>().MapList<TPo, TDo>(source);
+            return globaltool.Value.MapList<TPo, TDo>(source);
         }
         public TOut GetPersistentObject<TIn, TOut>(TIn source, bool addCreateUserId = false) where TIn : Entity, new() where TOut : PersistenceObjectBase
         {
-            var result = IocContainer.Resolve<IGlobalTool>().Map<TIn, TOut>(source);
+            var result = globaltool.Value.Map<TIn, TOut>(source);
             if (addCreateUserId)
                 result.CreateUserId = currentUser.UserId;
             return result;
         }
         public List<TOut> GetPersistentObjectList<TIn, TOut>(ICollection<TIn> source, bool addCreateUserId = false) where TIn : Entity, new() where TOut : PersistenceObjectBase
         {
-            var result = IocContainer.Resolve<IGlobalTool>().MapList<TIn, TOut>(source);
+            var result = globaltool.Value.MapList<TIn, TOut>(source);
             if (addCreateUserId)
                 result.ForEach(x => x.CreateUserId = currentUser.UserId);
             return result;
         }
         public static TOut GetDomainEntity<TIn, TOut>(TIn source) where TIn : PersistenceObjectBase, new() where TOut : Entity
         {
-            return IocContainer.Resolve<IGlobalTool>().Map<TIn, TOut>(source);
+            return globaltool.Value.Map<TIn, TOut>(source);
         }
         public static List<TOut> GetDomainEntityList<TIn, TOut>(ICollection<TIn> source) where TIn : PersistenceObjectBase, new() where TOut : Entity
         {
-            return IocContainer.Resolve<IGlobalTool>().MapList<TIn, TOut>(source);
+            return globaltool.Value.MapList<TIn, TOut>(source);
         }
         #endregion
     }

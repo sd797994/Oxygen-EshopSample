@@ -12,9 +12,9 @@ namespace InfrastructureBase
         {
             return (Expression<Func<TTo, bool>>)new WhereReplacerVisitor<TFrom, TTo>().Visit(target);
         }
-        public static Expression<Func<TTo, dynamic>> ReplaceParameter<TFrom, TTo>(this Expression<Func<TFrom, dynamic>> target)
+        public static Expression<Func<TTo, object>> ReplaceParameter<TFrom, TTo>(this Expression<Func<TFrom, dynamic>> target)
         {
-            return (Expression<Func<TTo, dynamic>>)new WhereReplacerDynamicVisitor<TFrom, TTo>().Visit(target);
+            return (Expression<Func<TTo, object>>)new WhereReplacerDynamicVisitor<TFrom, TTo>().Visit(target);
         }
         private class WhereReplacerVisitor<TFrom, TTo> : ExpressionVisitor
         {

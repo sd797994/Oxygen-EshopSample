@@ -15,7 +15,7 @@ namespace Trade.Infrastructure.Repository
     {
         private readonly TradeContext context;
         public TradeRepository(
-            TradeContext context, ICurrentUserInfo currentUser) : base(context, currentUser)
+            TradeContext context, IIocContainer container) : base(context, container)
         {
             this.context = context;
         }

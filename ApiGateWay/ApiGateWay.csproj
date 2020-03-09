@@ -4,16 +4,27 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="debugpublish\**" />
+    <Compile Remove="publish\**" />
+    <Content Remove="debugpublish\**" />
+    <Content Remove="publish\**" />
+    <EmbeddedResource Remove="debugpublish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="debugpublish\**" />
+    <None Remove="publish\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-    <PackageReference Include="Oxygen" Version="0.1.4" />
+    <PackageReference Include="Autofac.Configuration" Version="5.1.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Oxygen" Version="0.2.3" />
     <PackageReference Include="Oxygen.CsharpClientAgent" Version="0.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <ProjectReference Include="..\Public Interface\GoodsServiceInterface\GoodsServiceInterface.csproj" />
     <ProjectReference Include="..\Public Interface\OrderServiceInterface\OrderServiceInterface.csproj" />
     <ProjectReference Include="..\Public Interface\TradeServiceInterface\TradeServiceInterface.csproj" />
@@ -25,4 +36,7 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

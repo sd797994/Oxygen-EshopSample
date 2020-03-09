@@ -1,8 +1,10 @@
 ﻿using AggregateServiceManager.ServiceRoute;
+using ApplicationBase;
 using ApplicationBase.Infrastructure.Common;
 using BaseServcieInterface;
 using GoodsServiceInterface.Dtos;
 using InfrastructureBase;
+using Oxygen.IServerProxyFactory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,11 +16,11 @@ namespace AggregateServiceManager.AggregateService.Goods
     {
         private readonly ICacheService cacheService;
         private readonly string cachekey = "oxygen-goods-image-key";
-        public GetGoodsImageAggreService() : base("/api/GoodsService/GetGoodsImage/Query", typeof(GetGoodsImageReq))
+        public GetGoodsImageAggreService(ICacheService cacheService,IIocContainer container) : base("/api/GoodsService/GetGoodsImage/Query", typeof(GetGoodsImageReq),false, container)
         {
-            this.cacheService = IocContainer.Resolve<ICacheService>();
+            this.cacheService = cacheService;
         }
-        public async override Task<BaseApiResult<object>> Process(object input)
+        public async override Task<BaseApiResult<object>> Process(object input, IServerProxyFactory serverProxyFactory)
         {
             return await HandleAsync(async () =>
             {

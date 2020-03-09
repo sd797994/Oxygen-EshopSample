@@ -1,5 +1,9 @@
-﻿using BaseServcieInterface;
+﻿using ApplicationBase;
+using BaseServcieInterface;
 using DomainBase;
+using InfrastructureBase;
+using Microsoft.Extensions.Logging;
+using Oxygen.IServerProxyFactory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,16 +13,18 @@ namespace AggregateServiceManager.ServiceRoute
 {
     public abstract class AggreServiceBase
     {
-        public AggreServiceBase(string routeKey, Type inputType, bool needAuthCheck = false)
+        private readonly ILogger<AggreServiceBase> logger;
+        public AggreServiceBase(string routeKey, Type inputType, bool needAuthCheck = false, IIocContainer container = null)
         {
             RoutKey = routeKey;
             InputType = inputType;
             NeedAuthCheck = needAuthCheck;
+            logger = container.Resolve<ILogger<AggreServiceBase>>();
         }
         public string RoutKey { get; }
         public Type InputType { get; set; }
         public bool NeedAuthCheck { get; set; }
-        public abstract Task<BaseApiResult<object>> Process(object input);
+        public abstract Task<BaseApiResult<object>> Process(object input, IServerProxyFactory serverProxyFactory);
 
         public async Task<BaseApiResult<object>> HandleAsync<Tout>(Func<Task<Tout>> func, Func<CustomerException, Task> catchfunc = null)
         {
@@ -43,6 +49,7 @@ namespace AggregateServiceManager.ServiceRoute
                     }
                     else
                     {
+                        logger.LogError($"聚合服务调用异常:{e.Message}\r\n调用堆栈:{e.StackTrace.ToString()}");
                         result.Code = -1;
                         result.ErrMessage = "出错了,请稍后再试";
                     }

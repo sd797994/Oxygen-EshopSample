@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using InfrastructureBase;
 using System.Linq.Expressions;
+using Autofac;
 
 namespace AggregateServiceManager.ServiceRoute
 {
@@ -18,7 +19,7 @@ namespace AggregateServiceManager.ServiceRoute
     public static class RouteManager
     {
         private static Dictionary<string, AggreServiceBase> RouteList { get; set; }
-        public static void LoadAggregateServiceRoute()
+        public static void LoadAggregateServiceRoute(ILifetimeScope scope)
         {
             RouteList = new Dictionary<string, AggreServiceBase>();
             var types = typeof(RouteManager).Assembly.GetTypes().Where(x => !x.IsInterface && x.BaseType.Equals(typeof(AggreServiceBase)));
@@ -26,7 +27,7 @@ namespace AggregateServiceManager.ServiceRoute
             {
                 foreach (var type in types)
                 {
-                    var instance = type.CreateInstacne<AggreServiceBase>();
+                    var instance = scope.Resolve(type) as AggreServiceBase;
                     var routeKey = instance.GetPropertyValue("RoutKey") as string;
                     if (!RouteList.Keys.Contains(routeKey.ToLower()))
                     {

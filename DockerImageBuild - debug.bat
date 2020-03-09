@@ -1,17 +1,20 @@
 kubectl delete -f ./k8s/debug.yaml
-dotnet publish "ApiGateWay/ApiGateWay.csproj" -c Debug -o ApiGateWay/debugpublish
-docker build . -t apigateway -f ./ApiGateWay/DockerfileDebug
-dotnet publish "Services/CommonService/JobRunner/JobRunner.csproj" -c Debug -o Services/CommonService/JobRunner/debugpublish
-docker build . -t jobrunner -f ./Services/CommonService/JobRunner/DockerfileDebug
-dotnet publish "Services/UserService/User.Host/User.Host.csproj" -c Debug -o Services/UserService/User.Host/debugpublish
-docker build . -t userservice -f ./Services/UserService/User.Host/DockerfileDebug
-dotnet publish "Services/GoodsService/Goods.Host/Goods.Host.csproj" -c Debug -o Services/GoodsService/Goods.Host/debugpublish
-docker build . -t goodsservice -f ./Services/GoodsService/Goods.Host/DockerfileDebug
-dotnet publish "Services/OrderService/Order.Host/Order.Host.csproj" -c Debug -o Services/OrderService/Order.Host/debugpublish
-docker build . -t orderservice -f ./Services/OrderService/Order.Host/DockerfileDebug
-dotnet publish "Services/TradeService/Trade.Host/Trade.Host.csproj" -c Debug -o Services/TradeService/Trade.Host/debugpublish
-docker build . -t tradeservice -f ./Services/TradeService/Trade.Host/DockerfileDebug
-cd frontend
+cd ./ApiGateWay/
+docker build . -t apigateway -f DockerfileDebug
+cd ../Services/CommonService/JobRunner/
+docker build . -t jobrunner -f DockerfileDebug
+cd ../../UserService/User.Host/
+docker build . -t userservice -f DockerfileDebug
+cd ../../GoodsService/Goods.Host/
+docker build . -t goodsservice -f DockerfileDebug
+cd ../../OrderService/Order.Host/
+docker build . -t orderservice -f DockerfileDebug
+cd ../../TradeService/Trade.Host/
+docker build . -t tradeservice -f DockerfileDebug
+docker image prune -f
+
+cd ../../../frontend
+docker rmi frontend
+call npm run build
 docker build . -t frontend
-cd ../
 docker image prune -f

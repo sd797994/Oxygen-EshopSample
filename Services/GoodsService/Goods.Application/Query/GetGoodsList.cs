@@ -28,9 +28,10 @@ namespace Goods.Application.Query
         {
             return await HandleAsync(input, async () =>
             {
-                var result = await goodsRepository.PageQueryAsync(input.PageIndex, input.PageSize,new GoodsListQuerySpecification(input.Name,input.IsUpshelf), input.OrderParms.ConvertToOrderExpression<GoodsEntity>());
-                var result2 = new PageQueryDto<GoodsQueryDto>() { PageIndex = input.PageIndex, Data = globalTool.MapList<GoodsEntity, GoodsQueryDto>(result.Data), Total = result.Total };
-                return result2;
+                var result = await goodsRepository.PageQueryAsync(input.PageIndex, input.PageSize, new GoodsListQuerySpecification(input.Name, input.IsUpshelf),
+                    input.OrderParms.ConvertToOrderExpression<GoodsEntity>()
+                    );
+                return new PageQueryDto<GoodsQueryDto>() { PageIndex = input.PageIndex, Data = globalTool.MapList<GoodsEntity, GoodsQueryDto>(result.Data), Total = result.Total };
             });
         }
     }

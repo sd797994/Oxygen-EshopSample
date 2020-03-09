@@ -11,3 +11,11 @@ Debug
 Release
 obj
 **/debugpublish
+/frontend/node_modules
+/frontend/dist
+/ApiGateWay/publish
+/Services/CommonService/JobRunner/publish
+/Services/GoodsService/Goods.Host/publish
+/Services/OrderService/Order.Host/publish
+/Services/TradeService/Trade.Host/publish
+/Services/UserService/User.Host/publish

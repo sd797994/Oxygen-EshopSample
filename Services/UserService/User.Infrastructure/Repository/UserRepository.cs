@@ -1,6 +1,7 @@
 ﻿using ApplicationBase;
 using InfrastructureBase;
 using Microsoft.EntityFrameworkCore;
+using Oxygen.CommonTool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace User.Infrastructure.Repository
         private readonly UserContext _context;
 
         public UserRepository(
-            UserContext context, ICurrentUserInfo currentUser) : base(context, currentUser)
+            UserContext context, IIocContainer container) : base(context, container)
         {
             _context = context;
         }

@@ -17,7 +17,6 @@ namespace Trade.Host
     {
         public CustomerService(ILifetimeScope container, IConfiguration configuration, ICacheService cacheService, TradeContext tradeContext)
         {
-            IocContainer.BuilderIocContainer(container);
             cacheService.InitCacheService(configuration.GetSection("modules:2:properties:RedisConnection").Value);//启动缓存客户端
             tradeContext.Database.EnsureCreated();//自动迁移数据库
         }

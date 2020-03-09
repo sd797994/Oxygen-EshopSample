@@ -14,7 +14,7 @@ namespace AggregateServiceManager.ServiceRoute
 {
     public class RouteRequestProcesser
     {
-        public static async Task<object> CallService(string apiPath, string token, JObject input)
+        public static async Task<object> CallService(IServerProxyFactory serverProxyFactory, string apiPath, string token, JObject input)
         {
             CallServiceType callType;
             Type InputType;
@@ -22,7 +22,7 @@ namespace AggregateServiceManager.ServiceRoute
             IVirtualProxyServer remoteProxy = default;
             if (routeService == null)
             {
-                remoteProxy = IocContainer.Resolve<IServerProxyFactory>().CreateProxy(apiPath);
+                remoteProxy = serverProxyFactory.CreateProxy(apiPath);
                 if (remoteProxy != null)
                 {
                     InputType = remoteProxy.InputType;
@@ -43,7 +43,7 @@ namespace AggregateServiceManager.ServiceRoute
                 case CallServiceType.Aggregate:
                     if (AuthManager.CheckAuth(routeService, token, input, InputType, out object aggregateInputObj))
                     {
-                        return await routeService.Process(aggregateInputObj);
+                        return await routeService.Process(aggregateInputObj, serverProxyFactory);
                     }
                     else
                     {

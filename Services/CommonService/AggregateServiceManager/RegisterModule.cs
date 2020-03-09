@@ -21,6 +21,9 @@ namespace AggregateServiceManager
             builder.RegisterAssemblyTypes(typeof(InfrastructureBase.InfrastructureException).Assembly)
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            //注入聚合服务
+            var types = typeof(ServiceRoute.AggreServiceBase).Assembly.GetTypes().Where(x => !x.IsInterface && x.BaseType.Equals(typeof(ServiceRoute.AggreServiceBase))).ToArray();
+            builder.RegisterTypes(types).InstancePerLifetimeScope();
         }
     }
     public static class ModuleExtension

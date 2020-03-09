@@ -9,7 +9,7 @@ namespace Trade.Infrastructure.EfDataAccess
 {
     public class TransactionService : TransactionBase<TradeContext>, ITransaction
     {
-        public TransactionService(TradeContext context) : base(context)
+        public TransactionService(TradeContext context, IIocContainer container) : base(context, container)
         {
 
         }

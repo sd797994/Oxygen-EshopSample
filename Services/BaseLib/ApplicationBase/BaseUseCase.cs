@@ -39,7 +39,7 @@ namespace ApplicationBase
                 }
                 else
                 {
-                    logger.LogError(e.Message);
+                    logger.LogError($"用例服务调用异常:{e.Message}\r\n调用堆栈:{e.StackTrace.ToString()}");
                     result.Code = -1;
                     result.ErrMessage = "出错了,请稍后再试";
                 }
@@ -69,7 +69,7 @@ namespace ApplicationBase
                 }
                 else
                 {
-                    logger.LogError(e.Message);
+                    logger.LogError($"用例服务调用异常:{e.Message}\r\n调用堆栈:{e.StackTrace.ToString()}");
                     result.Code = -1;
                     result.ErrMessage = "出错了,请稍后再试";
                 }

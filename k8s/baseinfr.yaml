@@ -38,6 +38,7 @@ spec:
       port: 1433
       targetPort: 1433
       nodePort: 30003
+      name: tcp-mssql
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -72,6 +73,7 @@ spec:
     - protocol: TCP
       port: 6379
       targetPort: 6379
+      name: tcp-redis
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -106,3 +108,4 @@ spec:
     - protocol: TCP
       port: 5672
       targetPort: 5672
+      name: tcp-rabbitmq

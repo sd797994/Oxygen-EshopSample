@@ -18,7 +18,7 @@ namespace Order.Infrastructure.Repository
     {
         private readonly OrderContext _context;
         public OrderRepository(
-            OrderContext context, ICurrentUserInfo currentUser) : base(context, currentUser)
+            OrderContext context, IIocContainer container) : base(context, container)
         {
             _context = context;
         }

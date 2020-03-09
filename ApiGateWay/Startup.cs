@@ -49,18 +49,22 @@ namespace ApiGateWay
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IStartupFilter, GlobalRequestFilter>();
             services.AddHostedService<CustomerService>();
             services.AddCors(options =>
             {
                 options.AddPolicy("cors",
-                    builder => { builder.WithOrigins("http://www.oxygen-eshopsample.com","http://localhost:8080").AllowAnyHeader().AllowAnyMethod(); });
+                    builder => { builder.WithOrigins("http://www.oxygen-eshopsample.com").AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
             });
 
-            services.AddControllers().AddNewtonsoftJson(option => {
-                option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-            });
+            services.AddControllers(x=>x.Filters.Add(typeof(GlobalExceptionFilter))).AddControllersAsServices()
+                .AddNewtonsoftJson(option =>
+                {
+                    option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    option.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                })
+                ;
             services.AddDbContext<DefContext>(options => options.UseSqlServer(Configuration.GetSection("SqlConnectionString").Value));//Êý¾ÝÇ¨ÒÆ
             services.AddCap(x =>
             {
@@ -93,8 +97,6 @@ namespace ApiGateWay
             });
             app.UseRouting();
             app.UseCors("cors");
-            app.UseAuthorization();
-            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

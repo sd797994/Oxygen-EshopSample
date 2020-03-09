@@ -1,19 +1,36 @@
 kubectl delete -f ./k8s/release.yaml
-docker build . -t apigateway -f ./ApiGateWay/Dockerfile
-docker build . -t jobrunner -f ./Services/CommonService/JobRunner/Dockerfile
-docker build . -t userservice -f ./Services/UserService/User.Host/Dockerfile
-docker build . -t goodsservice -f ./Services/GoodsService/Goods.Host/Dockerfile
-docker build . -t orderservice -f ./Services/OrderService/Order.Host/Dockerfile
-docker build . -t tradeservice -f ./Services/TradeService/Trade.Host/Dockerfile
-cd frontend
+cd ./ApiGateWay/
+dotnet publish -c Release -o publish
+docker rmi apigateway
+docker build . -t apigateway -f Dockerfile
+
+cd ../Services/CommonService/JobRunner/
+dotnet publish -c Release -o publish
+docker rmi jobrunner
+docker build . -t jobrunner -f Dockerfile
+
+cd ../../UserService/User.Host/
+dotnet publish -c Release -o publish
+docker rmi userservice
+docker build . -t userservice -f Dockerfile
+
+cd ../../GoodsService/Goods.Host/
+dotnet publish -c Release -o publish
+docker rmi goodsservice
+docker build . -t goodsservice -f Dockerfile
+
+cd ../../OrderService/Order.Host/
+dotnet publish -c Release -o publish
+docker rmi orderservice
+docker build . -t orderservice -f Dockerfile
+
+cd ../../TradeService/Trade.Host/
+dotnet publish -c Release -o publish
+docker rmi tradeservice
+docker build . -t tradeservice -f Dockerfile
+
+cd ../../../frontend
+docker rmi frontend
+call npm run build
 docker build . -t frontend
-cd ../
 docker image prune -f
-
-
-
-
-
-
-
-

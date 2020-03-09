@@ -50,7 +50,10 @@
         var getimage = this.getimage;
         var reqDto = {
           Name: "",
-          OrderParms: [],
+          OrderParms: [
+		  {OrderName:"Name",IsAsc:true},
+		  {OrderName:"IsUpshelf",IsAsc:true}
+		  ],
           PageIndex: 1,
           PageSize: 1000,
           IsUpshelf: true

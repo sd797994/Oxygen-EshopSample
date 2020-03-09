@@ -6,7 +6,8 @@
     axios
       .post(hosturl + url, data, {
         headers: {
-          Token: sessionStorage.getItem("token")
+          Token: sessionStorage.getItem("token"),
+          canaryver: process.env.VUE_APP_CANARYVER
         }
       })
       .then(function (message) {

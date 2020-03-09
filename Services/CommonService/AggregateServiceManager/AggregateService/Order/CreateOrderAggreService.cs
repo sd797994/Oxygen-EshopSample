@@ -11,35 +11,33 @@ using GoodsServiceInterface.Dtos;
 using OrderServiceInterface.UseCase;
 using ApplicationException = ApplicationBase.ApplicationException;
 using ApplicationBase;
+using ApplicationBase.Infrastructure.Common;
+using Oxygen.IServerProxyFactory;
 
 namespace AggregateServiceManager.Order
 {
     public class CreateOrderAggreService : AggreServiceBase
     {
-        private readonly IWithholdingGoodsStock withholdingGoodsStock;
-        private readonly IOrderCreate orderCreate;
         private readonly IEventBus eventBus;
-        public CreateOrderAggreService() : base("/api/OrderService/OrderCreate/Excute", typeof(OrderCreateReq), true)
+        public CreateOrderAggreService(IEventBus eventBus, IIocContainer container) : base("/api/OrderService/OrderCreate/Excute", typeof(OrderCreateReq), true, container)
         {
-            withholdingGoodsStock = IocContainer.Resolve<IWithholdingGoodsStock>();
-            orderCreate = IocContainer.Resolve<IOrderCreate>();
-            eventBus = IocContainer.Resolve<IEventBus>();
+            this.eventBus = eventBus;
         }
-        public override async Task<BaseApiResult<object>> Process(object input)
+        public override async Task<BaseApiResult<object>> Process(object input, IServerProxyFactory serverProxyFactory)
         {
             bool needPublishEvent = false;
             return await HandleAsync(async () =>
             {
                 var value = (OrderCreateReq)input;
                 //rpc调用商品预扣库存
-                var withholdStock = await withholdingGoodsStock.Excute(value.Mapper<OrderCreateReq, WithholdingGoodsReq>());
+                var withholdStock = await serverProxyFactory.CreateProxy<IWithholdingGoodsStock>().Excute(value.Mapper<OrderCreateReq, WithholdingGoodsReq>());
                 if (withholdStock.IsError())
                 {
                     throw new ApplicationException(withholdStock.ErrMessage);
                 }
                 //rpc调用订单创建订单
                 value.GoodsList = withholdStock.Data.MapperList<SaleGoodsDetail, OrderCreateGoodsReq>();
-                var createOrder = await orderCreate.Excute(value);
+                var createOrder = await serverProxyFactory.CreateProxy<IOrderCreate>().Excute(value);
                 if (createOrder.IsError())
                 {
                     needPublishEvent = true;

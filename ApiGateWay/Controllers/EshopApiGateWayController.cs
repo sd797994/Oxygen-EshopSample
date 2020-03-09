@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AggregateServiceManager.ServiceRoute;
-using ApplicationBase;
-using Autofac;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using BaseServcieInterface;
-using Oxygen.CommonTool;
 using Oxygen.IServerProxyFactory;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateWay.Controllers
 {
@@ -20,26 +13,30 @@ namespace ApiGateWay.Controllers
     [ApiController]
     public class EshopApiGateWayController : ControllerBase
     {
-        public EshopApiGateWayController()
+        private readonly IServerProxyFactory serverProxyFactory;
+        private readonly ILogger<EshopApiGateWayController> logger;
+        public EshopApiGateWayController(IServerProxyFactory serverProxyFactory, ILogger<EshopApiGateWayController> logger)
         {
-
+            this.serverProxyFactory = serverProxyFactory;
+            this.logger = logger;
         }
         // GET api/values
         [HttpPost]
-        public async Task<IActionResult> Invoke(JObject input)
+        public async Task<object> Invoke(JObject input)
         {
             if (input != null)
             {
                 try
                 {
-                    return new JsonResult(await RouteRequestProcesser.CallService(Request.Path, Request.Headers["Token"], input));
+                    return await RouteRequestProcesser.CallService(serverProxyFactory, Request.Path, Request.Headers["Token"], input);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    return new JsonResult(new BaseApiResult<object> { ErrMessage = "出错了,请稍后再试", Code = -1 });
+                    logger.LogError($"网关调用异常:{e.Message}\r\n调用堆栈:{e.StackTrace.ToString()}");
+                    return new BaseApiResult<object> { ErrMessage = "出错了,请稍后再试", Code = -1 };
                 }
             }
-            return new JsonResult(new BaseApiResult<object> { ErrMessage = "无返回值", Code = -1 });
+            return new BaseApiResult<object> { ErrMessage = "无返回值", Code = -1 };
         }
     }
 }
