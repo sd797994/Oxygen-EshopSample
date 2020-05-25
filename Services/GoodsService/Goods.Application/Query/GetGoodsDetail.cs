@@ -10,17 +10,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ApplicationException = ApplicationBase.ApplicationException;
+using ApplicationBase.Infrastructure.Common;
 
 namespace Goods.Application.Query
 {
     public class GetGoodsDetail : BaseQueryService<GoodsDetailQueryReq, GoodsQueryDto>, IGetGoodsDetail
     {
         private readonly IGoodsRepository goodsRepository;
-        private readonly IGlobalTool globalTool;
-        public GetGoodsDetail(IGoodsRepository goodsRepository, IGlobalTool globalTool, IIocContainer iocContainer) : base(iocContainer)
+        public GetGoodsDetail(IGoodsRepository goodsRepository, IIocContainer iocContainer) : base(iocContainer)
         {
             this.goodsRepository = goodsRepository;
-            this.globalTool = globalTool;
         }
         public override async Task<BaseApiResult<GoodsQueryDto>> Query(GoodsDetailQueryReq input)
         {
@@ -32,7 +31,7 @@ namespace Goods.Application.Query
                 {
                     throw new ApplicationException("没有找到该商品!");
                 }
-                return globalTool.Map<GoodsEntity, GoodsQueryDto>(goods);
+                return goods.SetDto<GoodsEntity, GoodsQueryDto>();
             });
         }
     }

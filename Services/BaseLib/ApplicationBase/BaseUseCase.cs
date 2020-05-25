@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ApplicationBase.Infrastructure.Common;
 
 namespace ApplicationBase
 {
@@ -20,6 +21,7 @@ namespace ApplicationBase
             logger = container.Resolve<ILogger<BaseUseCase<T>>>();
             currentUser = container.Resolve<ICurrentUserInfo>();
             modelValidator = container.Resolve<ICustomModelValidator>();
+            DtoExtension.BuilderTool(container.Resolve<IGlobalTool>());
         }
         public BaseApiResult<Tout> Handle<Tout>(T input, Func<Tout> func, Func<Exception, Task> catchfunc = null)
         {

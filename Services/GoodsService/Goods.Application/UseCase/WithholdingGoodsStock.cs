@@ -1,4 +1,5 @@
 ﻿using ApplicationBase;
+using ApplicationBase.Infrastructure.Common;
 using BaseServcieInterface;
 using Goods.Domain.Repository;
 using Goods.Domain.Service;
@@ -31,12 +32,12 @@ namespace Goods.Application.UseCase
                 var goodsId = input.GoodsList.Select(y => y.GoodsId);
                 var goods = await goodsRepository.GetManyAsync(x => goodsId.Contains(x.Id) && x.IsUpshelf);
                 //调用领域服务检测商品有效性
-                var goodsServiceDtos = globalTool.MapList<SaleGoodsDetail, SaleGoodsLegalServiceDto>(input.GoodsList);
+                var goodsServiceDtos = input.GoodsList.SetDto<SaleGoodsDetail, SaleGoodsLegalServiceDto>();
                 new SaleGoodsCheckLegalService().LegalCheck(goods, ref goodsServiceDtos);
                 goodsRepository.UpdateRange(goods);
                 //持久化
                 await goodsRepository.SaveAsync();
-                return globalTool.MapList<SaleGoodsLegalServiceDto, SaleGoodsDetail>(goodsServiceDtos);
+                return goodsServiceDtos.SetDto<SaleGoodsLegalServiceDto, SaleGoodsDetail>();
             });
         }
     }

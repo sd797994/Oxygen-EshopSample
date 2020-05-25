@@ -17,11 +17,9 @@ namespace User.Application.UseCase
     public class UserAccountLockOrUnlock : BaseUseCase<AccountLockOrUnLockDto>, IUserAccountLockOrUnlock
     {
         private readonly IUserRepository userRepository;
-        private readonly IGlobalTool globalTool;
-        public UserAccountLockOrUnlock(IUserRepository userRepository, IGlobalTool globalTool, IIocContainer iocContainer) : base(iocContainer)
+        public UserAccountLockOrUnlock(IUserRepository userRepository, IIocContainer iocContainer) : base(iocContainer)
         {
             this.userRepository = userRepository;
-            this.globalTool = globalTool;
         }
         public async Task<BaseApiResult<bool>> Excute(AccountLockOrUnLockDto input)
         {

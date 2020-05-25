@@ -17,9 +17,17 @@ namespace InfrastructureBase
             {
                 return null;
             }
-            var param_obj = Expression.Parameter(typeof(T));
-            var param_val = Expression.Parameter(typeof(object));
-            Expression<Func<T, object>> result = Expression.Lambda<Func<T, object>>(Expression.Convert(Expression.Property(param_obj, p), typeof(object)), param_obj);
+            ParameterExpression param_obj = Expression.Parameter(typeof(T));
+            UnaryExpression body;
+            if (typeof(T).BaseType == null)
+            {
+                body = Expression.Convert(Expression.Property(Expression.Convert(param_obj, type), name), typeof(object));
+            }
+            else
+            {
+                body = Expression.Convert(Expression.Property(param_obj, p), typeof(object));
+            }
+            var result = Expression.Lambda<Func<T, object>>(body, param_obj);
             var getValue = result.Compile();
             return getValue(t);
         }

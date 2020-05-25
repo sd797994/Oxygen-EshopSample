@@ -7,21 +7,25 @@
   <ItemGroup>
     <Compile Remove="debugpublish\**" />
     <Compile Remove="publish\**" />
+    <Compile Remove="pub\**" />
     <Content Remove="debugpublish\**" />
     <Content Remove="publish\**" />
+    <Content Remove="pub\**" />
     <EmbeddedResource Remove="debugpublish\**" />
     <EmbeddedResource Remove="publish\**" />
+    <EmbeddedResource Remove="pub\**" />
     <None Remove="debugpublish\**" />
     <None Remove="publish\**" />
+    <None Remove="pub\**" />
   </ItemGroup>
 
 
   <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="5.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.2" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.11" />
     <PackageReference Include="HangFire.Redis.StackExchange" Version="1.8.1" />
     <PackageReference Include="Hangfire.Autofac" Version="2.3.1" />
     <ProjectReference Include="..\..\..\Public Interface\GoodsServiceInterface\GoodsServiceInterface.csproj" />

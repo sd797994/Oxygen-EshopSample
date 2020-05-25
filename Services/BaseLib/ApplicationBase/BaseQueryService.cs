@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
+using ApplicationBase.Infrastructure.Common;
 
 namespace ApplicationBase
 {
@@ -20,6 +22,7 @@ namespace ApplicationBase
             logger = container.Resolve<ILogger<BaseQueryService<Tin, TOut>>>();
             currentUser = container.Resolve<ICurrentUserInfo>();
             globalTool = container.Resolve<IGlobalTool>();
+            DtoExtension.BuilderTool(globalTool);
             modelValidator = container.Resolve<ICustomModelValidator>();
         }
         public abstract Task<BaseApiResult<TOut>> Query(Tin input);

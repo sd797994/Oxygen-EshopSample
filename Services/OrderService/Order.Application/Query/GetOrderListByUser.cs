@@ -1,4 +1,5 @@
 ﻿using ApplicationBase;
+using ApplicationBase.Infrastructure.Common;
 using BaseServcieInterface;
 using Order.Domain.Aggregation;
 using Order.Domain.Aggregation.ValueObject;
@@ -17,13 +18,11 @@ namespace Order.Application.Query
     {
         private readonly IOrderRepository orderRepository;
         private readonly IOrderHandleLogRepository orderHandleLogRepository;
-        private readonly IGlobalTool globalTool;
         private readonly ICurrentUserInfo currentUser;
-        public GetOrderListByUser(IOrderRepository orderRepository, IOrderHandleLogRepository orderHandleLogRepository, IGlobalTool globalTool,ICurrentUserInfo currentUser, IIocContainer iocContainer) : base(iocContainer)
+        public GetOrderListByUser(IOrderRepository orderRepository, IOrderHandleLogRepository orderHandleLogRepository,ICurrentUserInfo currentUser, IIocContainer iocContainer) : base(iocContainer)
         {
             this.orderRepository = orderRepository;
             this.orderHandleLogRepository = orderHandleLogRepository;
-            this.globalTool = globalTool;
             this.currentUser = currentUser;
         }
         public override async Task<BaseApiResult<List<QueryOrderDto>>> Query(QueryOrderReq input)
@@ -31,14 +30,14 @@ namespace Order.Application.Query
             return await HandleAsync(input, async () =>
             {
                 var data = await orderRepository.GetManyAsync(x => input.OrderType == 0 ? (x.State != 0) : x.State == (OrderStateEnum)input.OrderType && x.UserId == currentUser.UserId, true, input.OrderParms.ConvertToOrderExpression<OrderEntity>());
-                var result = globalTool.MapList<OrderEntity, QueryOrderDto>(data);
+                var result = data.SetDto<OrderEntity, QueryOrderDto>();
                 var orderIds = result.Select(x => x.Id).ToList();
                 var logs = await orderHandleLogRepository.GetManyAsync(x => orderIds.Contains(x.OrderId.Value));
                 result.ForEach(x =>
                 {
                     x.Time = x.CreateTime.ToString("yyyy-MM-dd HH:mm");
                     x.State = (int)data.First(y => y.OrderNo == x.OrderNo).State;
-                    x.orderLogs = globalTool.MapList<OrderHandleLogEntity, OrderLogsDto>(logs.Where(y => y.OrderId == x.Id));
+                    x.orderLogs = logs.Where(y => y.OrderId == x.Id).SetDto<OrderHandleLogEntity, OrderLogsDto>();
                 });
                 return result;
             });

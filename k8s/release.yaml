@@ -160,7 +160,7 @@ spec:
   ports:
   - port: 80 
     targetPort: 80 
-    name: http-userservice
+    name: http2-userservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -202,7 +202,7 @@ spec:
   ports:
   - port: 80 
     targetPort: 80 
-    name: http-tradeservice
+    name: http2-tradeservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -244,7 +244,7 @@ spec:
   ports:
   - port: 80 
     targetPort: 80 
-    name: http-goodsservice
+    name: http2-goodsservice
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -286,7 +286,7 @@ spec:
   ports:
   - port: 80 
     targetPort: 80 
-    name: http-orderservice
+    name: http2-orderservice
 ---
 apiVersion: apps/v1
 kind: Deployment

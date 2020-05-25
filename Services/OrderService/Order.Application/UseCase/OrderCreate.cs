@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 using Order.Domain.Factory;
 using Order.Domain.Aggregation;
 using Order.Domain.Event;
+using ApplicationBase.Infrastructure.Common;
 
 namespace Order.Application.UseCase
 {
     public class OrderCreate : BaseUseCase<OrderCreateReq>, IOrderCreate
     {
-        private readonly IGlobalTool globalTool;
         private readonly IOrderRepository orderRepository;
         private readonly IOrderHandleLogRepository orderHandleLogRepository;
         private readonly ITransaction transaction;
         private readonly IEventBus eventBus;
         public OrderCreate(IOrderRepository orderRepository, IOrderHandleLogRepository orderHandleLogRepository, ITransaction transaction,
-            IEventBus eventBus, IGlobalTool globalTool, IIocContainer iocContainer) : base(iocContainer)
+            IEventBus eventBus, IIocContainer iocContainer) : base(iocContainer)
         {
-            this.globalTool = globalTool;
             this.orderRepository = orderRepository;
             this.orderHandleLogRepository = orderHandleLogRepository;
             this.transaction = transaction;
@@ -33,7 +32,7 @@ namespace Order.Application.UseCase
                 using (var tran = transaction.BeginTransaction())
                 {
                     //创建订单
-                    var order = new OrderFactory().Create(input.UserId, globalTool.MapList<OrderCreateGoodsReq, OrderItemEntity>(input.GoodsList));
+                    var order = new OrderFactory().Create(input.UserId, input.GoodsList.SetDto<OrderCreateGoodsReq, OrderItemEntity>());
                     orderRepository.Add(order);
                     //创建订单记录
                     var log = new OrderHandleLogFactory().Create(order.OrderNo, order.Id, order.State, input.UserId, input.Account, "");
