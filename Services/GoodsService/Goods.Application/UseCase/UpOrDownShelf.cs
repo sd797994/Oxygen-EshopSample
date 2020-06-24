@@ -9,32 +9,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ApplicationException = ApplicationBase.ApplicationException;
+using Oxygen.IServerProxyFactory;
+using GoodsServiceInterface.Actor;
+using Oxygen.DaprActorProvider;
+using ApplicationBase.Infrastructure.Common;
+using GoodsServiceInterface.Actor.Dto;
 
 namespace Goods.Application.UseCase
 {
     public class UpOrDownShelf : BaseUseCase<UpOrDownShelfDto>, IUpOrDownShelf
     {
-        private readonly IGoodsRepository goodsRepository;
-        public UpOrDownShelf(IGoodsRepository goodsRepository, IIocContainer iocContainer) : base(iocContainer)
+        private readonly IServerProxyFactory serverProxyFactory;
+        public UpOrDownShelf(IServerProxyFactory serverProxyFactory, IIocContainer iocContainer) : base(iocContainer)
         {
-            this.goodsRepository = goodsRepository;
+            this.serverProxyFactory = serverProxyFactory;
         }
         public async Task<BaseApiResult<bool>> Excute(UpOrDownShelfDto input)
         {
             return await HandleAsync(input, async () =>
             {
                 //通过仓储获取商品聚合
-                var goods = await goodsRepository.GetAsync(input.Id);
-                if (goods == null)
+                var goods = serverProxyFactory.CreateProxy<IGoodsActor>(input.Id);
+                if (!await goods.Exists())
                 {
                     throw new ApplicationException("没有找到该商品!");
                 }
-                //商品修改上下架状态
-                goods.ChangeShelf(input.IsUpShelf);
-                //持久化
-                goodsRepository.Update(goods);
-                await goodsRepository.SaveAsync();
-                return true;
+                //上下架商品
+                return await goods.UpOrDownShelf(input.SetActorModel<UpOrDownShelfDto, GoodsActorDto>(true));
             });
         }
     }

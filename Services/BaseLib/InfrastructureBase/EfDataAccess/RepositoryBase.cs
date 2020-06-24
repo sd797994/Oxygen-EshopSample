@@ -22,11 +22,11 @@ namespace InfrastructureBase
     {
         private readonly TContext _context;
         private ICurrentUserInfo currentUser;
-        private static readonly AsyncLocal<IGlobalTool> globaltool = new AsyncLocal<IGlobalTool>();
+        private readonly IGlobalTool globaltool;
         protected RepositoryBase(TContext context, IIocContainer _container)
         {
             _context = context;
-            globaltool.Value = _container.Resolve<IGlobalTool>();
+            globaltool = _container.Resolve<IGlobalTool>();
             this.currentUser = _container.Resolve<ICurrentUserInfo>();
         }
         /// <summary>
@@ -276,47 +276,47 @@ namespace InfrastructureBase
 
         public TPo GetPersistentObject(TDo source, bool addCreateUserId = false)
         {
-            var result = globaltool.Value.Map<TDo, TPo>(source);
+            var result = globaltool.Map<TDo, TPo>(source);
             if (addCreateUserId)
                 result.CreateUserId = currentUser.UserId;
             return result;
         }
         public List<TPo> GetPersistentObjectList(ICollection<TDo> source, bool addCreateUserId = false)
         {
-            var result = globaltool.Value.MapList<TDo, TPo>(source);
+            var result = globaltool.MapList<TDo, TPo>(source);
             if (addCreateUserId)
                 result.ForEach(x => x.CreateUserId = currentUser.UserId);
             return result;
         }
-        public static TDo GetDomainEntity(TPo source)
+        public TDo GetDomainEntity(TPo source)
         {
-            return globaltool.Value.Map<TPo, TDo>(source);
+            return globaltool.Map<TPo, TDo>(source);
         }
-        public static List<TDo> GetDomainEntityList(ICollection<TPo> source)
+        public List<TDo> GetDomainEntityList(ICollection<TPo> source)
         {
-            return globaltool.Value.MapList<TPo, TDo>(source);
+            return globaltool.MapList<TPo, TDo>(source);
         }
         public TOut GetPersistentObject<TIn, TOut>(TIn source, bool addCreateUserId = false) where TIn : Entity, new() where TOut : PersistenceObjectBase
         {
-            var result = globaltool.Value.Map<TIn, TOut>(source);
+            var result = globaltool.Map<TIn, TOut>(source);
             if (addCreateUserId)
                 result.CreateUserId = currentUser.UserId;
             return result;
         }
         public List<TOut> GetPersistentObjectList<TIn, TOut>(ICollection<TIn> source, bool addCreateUserId = false) where TIn : Entity, new() where TOut : PersistenceObjectBase
         {
-            var result = globaltool.Value.MapList<TIn, TOut>(source);
+            var result = globaltool.MapList<TIn, TOut>(source);
             if (addCreateUserId)
                 result.ForEach(x => x.CreateUserId = currentUser.UserId);
             return result;
         }
-        public static TOut GetDomainEntity<TIn, TOut>(TIn source) where TIn : PersistenceObjectBase, new() where TOut : Entity
+        public TOut GetDomainEntity<TIn, TOut>(TIn source) where TIn : PersistenceObjectBase, new() where TOut : Entity
         {
-            return globaltool.Value.Map<TIn, TOut>(source);
+            return globaltool.Map<TIn, TOut>(source);
         }
-        public static List<TOut> GetDomainEntityList<TIn, TOut>(ICollection<TIn> source) where TIn : PersistenceObjectBase, new() where TOut : Entity
+        public List<TOut> GetDomainEntityList<TIn, TOut>(ICollection<TIn> source) where TIn : PersistenceObjectBase, new() where TOut : Entity
         {
-            return globaltool.Value.MapList<TIn, TOut>(source);
+            return globaltool.MapList<TIn, TOut>(source);
         }
         #endregion
     }

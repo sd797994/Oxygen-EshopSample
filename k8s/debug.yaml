@@ -18,6 +18,10 @@ spec:
       labels:
         app: apigateway-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "apigateway"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -30,54 +34,68 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: apigateway-dep-v2
-spec: 
-  replicas: 1
-  selector:
-    matchLabels:
-      app: apigateway-pod
-  minReadySeconds: 5
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
-  template:
-    metadata:
-      labels:
-        app: apigateway-pod
-        version: v2
-    spec:
-      containers:
-        - name: web
-          image: apigateway:latest
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - mountPath: /app
-              name: v1
-            - mountPath: /remote_debugger:rw
-              name: v2
-      volumes:
-        - name: v1
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
-        - name: v2
-          hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+  # name: apigateway-dep-v2
+# spec: 
+  # replicas: 1
+  # selector:
+    # matchLabels:
+      # app: apigateway-pod
+  # minReadySeconds: 5
+  # strategy:
+    # type: RollingUpdate
+    # rollingUpdate:
+      # maxUnavailable: 1
+      # maxSurge: 1
+  # template:
+    # metadata:
+      # labels:
+        # app: apigateway-pod
+        # version: v2
+      # annotations:
+        # dapr.io/enabled: "true"
+        # dapr.io/id: "apigateway"
+        # dapr.io/port: "80"
+    # spec:
+      # containers:
+        # - name: web
+          # image: apigateway:latest
+          # imagePullPolicy: Never
+          # ports:
+            # - containerPort: 80
+          # volumeMounts:
+            # - mountPath: /app
+              # name: v1
+            # - mountPath: /remote_debugger:rw
+              # name: v2
+            # - mountPath: /root/.vs-debugger
+              # name: v3
+      # volumes:
+        # - name: v1
+          # hostPath:
+            # path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/ApiGateWay/bin/Debug/netcoreapp3.1
+        # - name: v2
+          # hostPath:
+            # path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        # - name: v3
+          # hostPath:
+            # path: /host_mnt/e/dockerdebugger/.vs-debugger
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -110,6 +128,10 @@ spec:
       labels:
         app: jobrunner-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "jobrunner"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -122,13 +144,18 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/CommonService/JobRunner/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/CommonService/JobRunner/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
+          hostPath:
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -150,6 +177,10 @@ spec:
       labels:
         app: userservice-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "userservice"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -162,55 +193,68 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
----
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: userservice-dep-v2
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: userservice-pod
-  minReadySeconds: 5
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
-  template:
-    metadata:
-      labels:
-        app: userservice-pod
-        version: v2
-    spec:
-      containers:
-        - name: web
-          image: userservice:latest
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - mountPath: /app
-              name: v1
-            - mountPath: /remote_debugger:rw
-              name: v2
-      volumes:
-        - name: v1
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
-        - name: v2
-          hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+  # name: userservice-dep-v2
+# spec:
+  # replicas: 1
+  # selector:
+    # matchLabels:
+      # app: userservice-pod
+  # minReadySeconds: 5
+  # strategy:
+    # type: RollingUpdate
+    # rollingUpdate:
+      # maxUnavailable: 1
+      # maxSurge: 1
+  # template:
+    # metadata:
+      # labels:
+        # app: userservice-pod
+        # version: v2
+      # annotations:
+        # dapr.io/enabled: "true"
+        # dapr.io/id: "userservice"
+        # dapr.io/port: "80"
+    # spec:
+      # containers:
+        # - name: web
+          # image: userservice:latest
+          # imagePullPolicy: Never
+          # ports:
+            # - containerPort: 80
+          # volumeMounts:
+            # - mountPath: /app
+              # name: v1
+            # - mountPath: /remote_debugger:rw
+              # name: v2
+            # - mountPath: /root/.vs-debugger
+              # name: v3
+      # volumes:
+        # - name: v1
+          # hostPath:
+            # path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/UserService/User.Host/bin/Debug/netcoreapp3.1
+        # - name: v2
+          # hostPath:
+            # path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        # - name: v3
+          # hostPath:
+            # path: /host_mnt/e/dockerdebugger/.vs-debugger
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -245,6 +289,10 @@ spec:
       labels:
         app: tradeservice-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "tradeservice"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -257,13 +305,18 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/TradeService/Trade.Host/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/TradeService/Trade.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
+          hostPath:
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
 apiVersion: v1
 kind: Service
@@ -299,6 +352,10 @@ spec:
       labels:
         app: goodsservice-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "goodsservice"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -311,13 +368,18 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/GoodsService/Goods.Host/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/GoodsService/Goods.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
+          hostPath:
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
 apiVersion: v1
 kind: Service
@@ -353,6 +415,10 @@ spec:
       labels:
         app: orderservice-pod
         version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/id: "orderservice"
+        dapr.io/port: "80"
     spec:
       containers:
         - name: web
@@ -365,13 +431,18 @@ spec:
               name: v1
             - mountPath: /remote_debugger:rw
               name: v2
+            - mountPath: /root/.vs-debugger
+              name: v3
       volumes:
         - name: v1
           hostPath:
-            path: /e/dotnet_project/Oxygen-EshopSample/Services/OrderService/Order.Host/bin/Debug/netcoreapp3.1
+            path: /host_mnt/e/dotnet_project/Oxygen-EshopSample/Services/OrderService/Order.Host/bin/Debug/netcoreapp3.1
         - name: v2
           hostPath:
-            path: /c/Users/Administrator/vsdbg/vs2017u5
+            path: /host_mnt/c/Users/Administrator/vsdbg/vs2017u5
+        - name: v3
+          hostPath:
+            path: /host_mnt/e/dockerdebugger/.vs-debugger
 ---
 apiVersion: v1
 kind: Service

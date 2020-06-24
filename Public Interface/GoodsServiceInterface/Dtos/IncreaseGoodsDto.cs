@@ -12,6 +12,6 @@ namespace GoodsServiceInterface.Dtos
         public Guid Id { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "库存超出范围")]
         [Required(ErrorMessage = "请输入库存")]
-        public int stock { get; set; }
+        public int StockNumber { get; set; }
     }
 }

@@ -11,15 +11,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ApplicationException = ApplicationBase.ApplicationException;
+using Oxygen.IServerProxyFactory;
+using GoodsServiceInterface.Actor;
+using Oxygen.DaprActorProvider;
 
 namespace Goods.Application.UseCase
 {
     public class CreateGoods : BaseUseCase<CreateGoodsDto>, ICreateGoods
     {
         private readonly IGoodsRepository goodsRepository;
-        public CreateGoods(IGoodsRepository goodsRepository, IIocContainer iocContainer) : base(iocContainer)
+        private readonly IServerProxyFactory serverProxyFactory;
+        public CreateGoods(IGoodsRepository goodsRepository, IServerProxyFactory serverProxyFactory, IIocContainer iocContainer) : base(iocContainer)
         {
             this.goodsRepository = goodsRepository;
+            this.serverProxyFactory = serverProxyFactory;
         }
         public async Task<BaseApiResult<bool>> Excute(CreateGoodsDto input)
         {
@@ -33,9 +38,10 @@ namespace Goods.Application.UseCase
                     //仓储添加
                     goodsRepository.Add(goods);
                     await goodsRepository.SaveAsync();
+                    var proxy = serverProxyFactory.CreateProxy<IGoodsActor>(goods.Id);
+                    await proxy.Add(goods);//创建actor对象到缓存里
                     return true;
                 }
-                //持久化
                 return false;
             });
         }

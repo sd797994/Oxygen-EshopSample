@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.0.3" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.0.4" />
+    <PackageReference Include="Oxygen" Version="0.2.9" />
   </ItemGroup>
 
   <ItemGroup>

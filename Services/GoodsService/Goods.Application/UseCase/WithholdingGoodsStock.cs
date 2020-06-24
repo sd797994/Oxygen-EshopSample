@@ -1,11 +1,16 @@
 ﻿using ApplicationBase;
 using ApplicationBase.Infrastructure.Common;
 using BaseServcieInterface;
+using Goods.Domain.Aggregation;
 using Goods.Domain.Repository;
 using Goods.Domain.Service;
 using Goods.Domain.Service.Dto;
+using GoodsServiceInterface.Actor;
+using GoodsServiceInterface.Actor.Dto;
 using GoodsServiceInterface.Dtos;
 using GoodsServiceInterface.UseCase;
+using Oxygen.DaprActorProvider;
+using Oxygen.IServerProxyFactory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +22,50 @@ namespace Goods.Application.UseCase
 {
     public class WithholdingGoodsStock : BaseUseCase<WithholdingGoodsReq>, IWithholdingGoodsStock
     {
-        private readonly IGoodsRepository goodsRepository;
-        private readonly IGlobalTool globalTool;
-        public WithholdingGoodsStock(IGoodsRepository goodsRepository, IGlobalTool globalTool, IIocContainer iocContainer) : base(iocContainer)
+        private readonly IServerProxyFactory serverProxyFactory;
+        public WithholdingGoodsStock(IServerProxyFactory serverProxyFactory, IIocContainer iocContainer) : base(iocContainer)
         {
-            this.goodsRepository = goodsRepository;
-            this.globalTool = globalTool;
+            this.serverProxyFactory = serverProxyFactory;
         }
         public async Task<BaseApiResult<List<SaleGoodsDetail>>> Excute(WithholdingGoodsReq input)
         {
             return await HandleAsync(input, async () =>
             {
-                //获取商品
-                var goodsId = input.GoodsList.Select(y => y.GoodsId);
-                var goods = await goodsRepository.GetManyAsync(x => goodsId.Contains(x.Id) && x.IsUpshelf);
-                //调用领域服务检测商品有效性
-                var goodsServiceDtos = input.GoodsList.SetDto<SaleGoodsDetail, SaleGoodsLegalServiceDto>();
-                new SaleGoodsCheckLegalService().LegalCheck(goods, ref goodsServiceDtos);
-                goodsRepository.UpdateRange(goods);
-                //持久化
-                await goodsRepository.SaveAsync();
-                return goodsServiceDtos.SetDto<SaleGoodsLegalServiceDto, SaleGoodsDetail>();
+                var rollbackList = new List<(IGoodsActor goods, GoodsActorDto input)>();
+                var goodsEntities = new List<GoodsEntity>();
+                var needRollback = false;
+                input.GoodsList.ForEach(async detail =>
+                {
+                    var goods = serverProxyFactory.CreateProxy<IGoodsActor>(detail.GoodsId);
+                    var goodsEntity = await goods.Get();
+                    if (goodsEntity == null)
+                    {
+                        needRollback = true;
+                        return;
+                    }
+                    else
+                    {
+                        goodsEntities.Add(goodsEntity);
+                        var param = input.SetActorModel<WithholdingGoodsReq, GoodsActorDto>(true);
+                        if (await goods.WithholdingGoodsStock(param))
+                        {
+                            rollbackList.Add((goods, param));
+                        }
+                        else
+                        {
+                            needRollback = true;
+                            return;
+                        }
+                    }
+                });
+                if (needRollback && rollbackList.Any())
+                {
+                    rollbackList.ForEach(x => { x.input.Rollback = true; x.goods.WithholdingGoodsStock(x.input); });
+                    throw new ApplicationBase.ApplicationException("部分商品库存不足,请刷新后重试");
+                }
+                var result = goodsEntities.SetDto<List<GoodsEntity>, List<SaleGoodsDetail>>();
+                result.ForEach(x => x.TotalPrice = x.SinglePrice * x.Count);
+                return result;
             });
         }
     }

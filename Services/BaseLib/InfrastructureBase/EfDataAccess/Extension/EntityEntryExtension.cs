@@ -17,9 +17,7 @@ namespace InfrastructureBase
         {
             foreach(var entityEntry in entityEntrys)
             {
-                entityEntry.Property("CreateTime").IsModified = false;
-                entityEntry.Property("CreateUserId").IsModified = false;
-                entityEntry.Property("IsDeleted").IsModified = false;
+                entityEntry.NotModifyBaseProperties();
             }
         }
     }

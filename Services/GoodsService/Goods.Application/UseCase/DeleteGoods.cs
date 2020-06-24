@@ -1,8 +1,11 @@
 ﻿using ApplicationBase;
 using BaseServcieInterface;
 using Goods.Domain.Repository;
+using GoodsServiceInterface.Actor;
 using GoodsServiceInterface.Dtos;
 using GoodsServiceInterface.UseCase;
+using Oxygen.DaprActorProvider;
+using Oxygen.IServerProxyFactory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,24 +16,23 @@ namespace Goods.Application.UseCase
 {
     public class DeleteGoods : BaseUseCase<DeleteGoodsReq>, IDeleteGoods
     {
-        private readonly IGoodsRepository goodsRepository;
-        public DeleteGoods(IGoodsRepository goodsRepository, IIocContainer iocContainer) : base(iocContainer)
+        private readonly IServerProxyFactory serverProxyFactory;
+        public DeleteGoods(IServerProxyFactory serverProxyFactory, IIocContainer iocContainer) : base(iocContainer)
         {
-            this.goodsRepository = goodsRepository;
+            this.serverProxyFactory = serverProxyFactory;
         }
         public async Task<BaseApiResult<bool>> Excute(DeleteGoodsReq input)
         {
             return await HandleAsync(input, async () =>
             {
                 //通过仓储获取商品聚合
-                var goods = await goodsRepository.GetAsync(input.Id);
-                if (goods == null)
+                var goods =  serverProxyFactory.CreateProxy<IGoodsActor>(input.Id);
+                if (!await goods.Exists())
                 {
                     throw new ApplicationException("没有找到该商品!");
                 }
-                //持久化
-                goodsRepository.Delete(goods);
-                await goodsRepository.SaveAsync();
+                //删除对象
+                await goods.Delete();
                 return true;
             });
         }

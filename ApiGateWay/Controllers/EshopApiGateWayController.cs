@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 using BaseServcieInterface;
 using Oxygen.IServerProxyFactory;
 using Microsoft.Extensions.Logging;
+using InfrastructureBase;
+using GoodsServiceInterface.Actor;
+using Oxygen.DaprActorProvider;
 
 namespace ApiGateWay.Controllers
 {

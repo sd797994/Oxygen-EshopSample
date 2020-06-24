@@ -12,10 +12,6 @@ namespace Goods.Domain.Service
     {
         public void LegalCheck(List<GoodsEntity> goodslist, ref List<SaleGoodsLegalServiceDto> sources)
         {
-            if (goodslist.Count != sources.Count())
-            {
-                throw new DomainException("部分商品没有查询到");
-            }
             foreach (var goods in goodslist)
             {
                 var sourceGoods = sources.FirstOrDefault(x => x.GoodsId == goods.Id);
