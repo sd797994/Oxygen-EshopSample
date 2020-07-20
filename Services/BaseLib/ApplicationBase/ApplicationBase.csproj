@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.0.4" />
-    <PackageReference Include="Oxygen" Version="0.2.9" />
+    <PackageReference Include="Oxygen" Version="0.3.1" />
   </ItemGroup>
 
   <ItemGroup>

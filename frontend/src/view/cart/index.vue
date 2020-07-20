@@ -74,7 +74,7 @@
         //创建订单
         var GoodsList = [];
         this.goods.forEach(x => {
-          if (x.choose) GoodsList.push({ GoodsId: x.id, Count: x.count, imageId: x.imageId });
+          if (x.choose) GoodsList.push({ GoodsId: x.id, StockNumber: x.count, imageId: x.imageId });
         });
         var clearAll = this.clearAll;
         var router = this.$router;

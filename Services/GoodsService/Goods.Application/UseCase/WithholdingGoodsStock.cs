@@ -64,7 +64,7 @@ namespace Goods.Application.UseCase
                     throw new ApplicationBase.ApplicationException("部分商品库存不足,请刷新后重试");
                 }
                 var result = goodsEntities.SetDto<List<GoodsEntity>, List<SaleGoodsDetail>>();
-                result.ForEach(x => x.TotalPrice = x.SinglePrice * x.Count);
+                result.ForEach(x => x.TotalPrice = x.SinglePrice * x.StockNumber);
                 return result;
             });
         }

@@ -21,7 +21,7 @@ namespace Goods.Application.Actor
         private readonly ILifetimeScope container;
         public GoodsActor(ActorService actorService,ActorId actorId,ILifetimeScope container) : base(actorService, actorId, container)
         {
-            Console.WriteLine($"Actor启动成功：{DateTime.Now}");
+            Console.WriteLine($"Actor {actorId} 启动成功：{DateTime.Now}");
             this.container = container;
         }
 

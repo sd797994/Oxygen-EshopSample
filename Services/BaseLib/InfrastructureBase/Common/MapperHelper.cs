@@ -75,8 +75,15 @@ namespace MapperExtension
 
                     continue;
                 }
+                //当两者是枚举 - 值类型关系时
+                if ((sourceItem.PropertyType.IsValueType && targetItem.PropertyType.IsEnum) || (targetItem.PropertyType.IsValueType && sourceItem.PropertyType.IsEnum))
+                {
+                    var expression = Expression.Convert(sourceProperty, targetItem.PropertyType);
+                    memberBindings.Add(Bind(targetItem, expression));
+                    continue;
 
-                if (targetItem.PropertyType != sourceItem.PropertyType)
+                }
+                else if (targetItem.PropertyType != sourceItem.PropertyType)
                     continue;
 
                 memberBindings.Add(Bind(targetItem, sourceProperty));
